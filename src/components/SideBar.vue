@@ -21,23 +21,11 @@
         注意事项
       </div>
       <div class="side-bar-item-content">
-        一、这里的聊天指的是单轮聊天，"培养感情"的过程在模型训练时就已经完成了。
-        二、为提升识别的准确率，输入的话最好不要带有标点符号（无论是句中还是句末）。
-        三、若回复的结果不够理想，可将一些少见的词语用空格分隔，再重新输入。
-        四、输入的话不要多于30字，且最好避免生僻字，即选择在 《现代汉语常用字表》 中的汉字（emm因为奔奔驼的词汇量还比较小）。
-        五、每次上传文件后，需同时按下F5与Shift键进行刷新，方可再次上传文件。
-      </div>
-    </div>
-    <div class="side-bar-item">
-      <div class="side-bar-item-title">
-        学习交流
-      </div>
-      <div class="side-bar-item-content">
-        <el-descriptions title="" :column="1" border>
-          <el-descriptions-item label="QQ" align="left" label-align="left" class-name="text" label-class-name="label">798586304</el-descriptions-item>
-          <el-descriptions-item label="微信" align="left" label-align="left" class-name="text" label-class-name="label">lzy628599475</el-descriptions-item>
-          <el-descriptions-item label="知乎" align="left" label-align="left" class-name="text" label-class-name="label">zyliang</el-descriptions-item>
-        </el-descriptions>
+        <p>一、这里的聊天指的是单轮聊天，"培养感情"的过程在模型训练时就已经完成了。</p>
+        <p>二、为提升识别的准确率，输入的话最好不要带有标点符号（无论是句中还是句末）。</p>
+        <p>三、若回复的结果不够理想，可将一些少见的词语用空格分隔，再重新输入。</p>
+        <p>四、输入的话不要多于30字，且最好避免生僻字，即选择在 《现代汉语常用字表》 中的汉字（emm因为奔奔驼的词汇量还比较小）。</p>
+        <p>五、每次上传文件后，需同时按下F5与Shift键进行刷新，方可再次上传文件。</p>
       </div>
     </div>
   </div>
@@ -62,6 +50,7 @@
     background-color: white;
     box-shadow: 0 0 5px #ddd;
     border-radius: 5px;
+    user-select: none;
 
     &:first-child, &:last-child {
       margin: 0;
@@ -69,25 +58,17 @@
 
     .side-bar-item-title {
       font-size: 17px;
+      font-weight: 600;
       text-align: left;
-      padding: 0 0.5em;
       line-height: 1.5em;
       letter-spacing: 1px;
     }
 
     .side-bar-item-content {
       font-size: 15px;
-      text-indent: 2em;
 
-      /deep/.text {
-        text-align: left;
-        width: 15em;
-        background-color: white;
-      }
-      /deep/.label {
-        text-align: left;
-        width: 5em;
-        background-color: white;
+      p {
+        margin: 0;
       }
     }
   }
