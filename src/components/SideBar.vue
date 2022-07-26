@@ -66,6 +66,7 @@
 
     .side-bar-item-content {
       font-size: 15px;
+      text-align: left;
 
       p {
         margin: 0;
