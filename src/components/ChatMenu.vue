@@ -1,6 +1,8 @@
 <template>
   <div id="chat-menu">
-    <div class="chat-message"></div>
+    <div class="chat-message">
+      <chat-box v-for="item in messages" :key="item.id" :id="item.id" :avatar="item.avatar" :poster="item.poster" :message="item.message"></chat-box>
+    </div>
     <div class="chat-input">
       <textarea id="chat-input" v-model="inputValue" ref="inputElement"></textarea>
       <el-button type="primary" auto-insert-space @click="handlePostMessage">发送</el-button>
@@ -9,22 +11,62 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, unref } from 'vue'
 import type { Ref } from 'vue'
+import axios from 'axios'
 import Message from './../model/message'
+import ChatBox from './ChatBox.vue'
+import { ElMessage } from 'element-plus'
 
 const inputValue = ref('')
 
 const inputElement: Ref<HTMLTextAreaElement | null> = ref(null)
 
-const message: Ref<Message[]> = ref([])
+const messages: Ref<Message[]> = ref([])
+
+// ls
+messages.value.push(new Message('user', 'test'))
+messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
+messages.value.push(new Message('robot', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+messages.value.push(new Message('robot', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+messages.value.push(new Message('robot', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
+messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
+messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
 
 onMounted(() => {
   inputElement.value?.focus()
 })
 
-function handlePostMessage () {
-  console.log(inputValue.value)
+async function handlePostMessage () {
+  const input = unref(inputValue)
+  if (input.length === 0) return
+
+  messages.value.push(new Message('user', input))
+
+  try {
+    const res = await axios.post('http://127.0.0.1:5000/processText', input, {
+      headers: {
+        'Content-Type': 'text/plain'
+      }
+    })
+    console.log(res)
+
+    inputValue.value = ''
+    ElMessage({
+      type: 'success',
+      message: '成功',
+      showClose: true
+    })
+  } catch (err) {
+    console.error(err)
+
+    ElMessage({
+      type: 'error',
+      message: '网络异常',
+      showClose: true
+    })
+  }
 }
 </script>
 
@@ -47,6 +89,31 @@ function handlePostMessage () {
   .chat-message {
     flex: 3;
     width: 100%;
+
+    overflow: hidden auto;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 5px;
+      background-color: #eee;
+    }
+
+    &::-webkit-scrollbar-track-piece {}
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: #ccc;
+    }
+
+    &::-webkit-scrollbar-button {}
+
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
   }
 
   .chat-input {
@@ -69,10 +136,6 @@ function handlePostMessage () {
       padding: 1em;
 
       font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-
-      &:focus {
-        outline: 1px solid lightskyblue;
-      }
     }
 
     > button {
