@@ -3,12 +3,12 @@
     <div class="message-avatar">
       <img :src="props.avatar" alt="" decoding="async" loading="lazy">
     </div>
-    <div class="message-message">{{ props.message }}</div>
+    <div :class="['message-message', type]">{{ props.message }}</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
 
 const props = defineProps<{
   id: number,
@@ -16,6 +16,9 @@ const props = defineProps<{
   poster: string,
   message: string,
 }>()
+
+const type = computed(() => props.poster === 'user' ? 'message-user' : 'message-robot')
+
 </script>
 
 <style lang="less" scoped>
@@ -52,14 +55,13 @@ const props = defineProps<{
     margin: 0 20px;
     padding: 10px;
 
-    background-color: rgb(30, 110, 255);
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 2.5px 2.5px 5px #eee;
 
     text-align: left;
     font-size: 15px;
-    color: white;
+
     line-height: 1.25em;
     word-wrap: break-word;
     text-overflow: ellipsis;
@@ -69,5 +71,15 @@ const props = defineProps<{
       color: black;
     }
   }
+
+  .message-user {
+    color: white;
+    background-color: rgb(30, 110, 255);
+  }
+  .message-robot {
+    color: black;
+    background-color: rgb(250, 250, 250);
+  }
+
 }
 </style>

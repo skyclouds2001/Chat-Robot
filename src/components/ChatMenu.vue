@@ -24,7 +24,7 @@ const inputElement: Ref<HTMLTextAreaElement | null> = ref(null)
 
 const messages: Ref<Message[]> = ref([])
 
-// ls
+// test
 messages.value.push(new Message('user', 'test'))
 messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
 messages.value.push(new Message('robot', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
@@ -40,9 +40,11 @@ onMounted(() => {
 
 async function handlePostMessage () {
   const input = unref(inputValue)
+  const mes = new Message('user', input)
+
   if (input.length === 0) return
 
-  messages.value.push(new Message('user', input))
+  messages.value.push(mes)
 
   try {
     const res = await axios.post('http://127.0.0.1:5000/processText', input, {
@@ -52,6 +54,9 @@ async function handlePostMessage () {
     })
     console.log(res)
 
+    // todo: save message
+    // localStorage.setItem(mes.timestamp.toString(), JSON.stringify([mes, res]))
+
     inputValue.value = ''
     ElMessage({
       type: 'success',
@@ -60,6 +65,8 @@ async function handlePostMessage () {
     })
   } catch (err) {
     console.error(err)
+
+    messages.value.pop()
 
     ElMessage({
       type: 'error',
