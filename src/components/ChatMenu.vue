@@ -54,7 +54,7 @@ async function handlePostMessage () {
   messages.value.push(mes)
 
   try {
-    const res = await axios.post('http://127.0.0.1:5000/processText', input, {
+    const res = await axios.post('http://114.132.221.148/processText', input, {
       headers: {
         'Content-Type': 'text/plain'
       }
