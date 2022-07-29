@@ -3,6 +3,7 @@ class Message {
   public poster: string;
   public avatar: string;
   public message: string;
+  public response: string | null;
   public readonly timestamp: number;
 
   constructor (poster: string, message: string) {
@@ -11,6 +12,7 @@ class Message {
     this.poster = poster
     this.message = message
     this.id = this.timestamp + '#message#' + Math.floor(Math.random() * 10000)
+    this.response = null
     switch (poster) {
       case 'robot':
         this.avatar = 'https://cdn.dribbble.com/users/124475/screenshots/2470556/tettra_1.jpg'

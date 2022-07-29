@@ -1,8 +1,3 @@
-// interface czResult {
-//   message: Event,
-//   success: boolean
-// }
-//
 // class IndexedDB {
 //   private db: IDBDatabase | null
 //

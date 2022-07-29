@@ -24,6 +24,8 @@ const inputElement: Ref<HTMLTextAreaElement | null> = ref(null)
 
 const messages: Ref<Message[]> = ref([])
 
+const DEFAULT_MESSAGE_NUMBER = 2
+
 // test
 messages.value.push(new Message('user', 'test'))
 messages.value.push(new Message('user', 'test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test '))
@@ -36,6 +38,11 @@ messages.value.push(new Message('user', 'test test test test test test test test
 
 onMounted(() => {
   inputElement.value?.focus()
+
+  const times: number[] = JSON.parse(localStorage.getItem('timestamp') || '[]') || []
+  for (let i = 0; i < Math.min(DEFAULT_MESSAGE_NUMBER, times.length); ++i) {
+    messages.value.unshift(JSON.parse(localStorage.getItem(times[i]) || '{}') || {})
+  }
 })
 
 async function handlePostMessage () {
@@ -54,8 +61,9 @@ async function handlePostMessage () {
     })
     console.log(res)
 
-    // todo: save message
-    // localStorage.setItem(mes.timestamp.toString(), JSON.stringify([mes, res]))
+    // todo    save message
+    localStorage.setItem(mes.timestamp.toString(), JSON.stringify(mes))
+    localStorage.setItem('timestamp', JSON.stringify((JSON.parse(localStorage.getItem('timestamp') || '[]') || []).unshift(mes.timestamp)))
 
     inputValue.value = ''
     ElMessage({
