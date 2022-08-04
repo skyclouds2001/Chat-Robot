@@ -1,10 +1,10 @@
 <template>
   <div id="chat-menu">
     <div class="chat-message">
-      <chat-box v-for="item in messages" :key="item.id" :id="item.id" :avatar="item.avatar" :poster="item.poster" :message="item.message"></chat-box>
+      <chat-box v-for="item in messages" :key="item.timestamp" :id="item.timestamp" :avatar="item.avatar" :poster="item.poster" :message="item.message"></chat-box>
     </div>
     <div class="chat-input">
-      <textarea id="chat-input" v-model="inputValue" ref="inputElement"></textarea>
+      <textarea id="chat-input" name="chat-input" v-model="inputValue" ref="inputElement"></textarea>
       <el-button type="primary" auto-insert-space @click="handlePostMessage">发送</el-button>
     </div>
   </div>
@@ -41,7 +41,7 @@ onMounted(() => {
 
   const times: number[] = JSON.parse(localStorage.getItem('timestamp') || '[]') || []
   for (let i = 0; i < Math.min(DEFAULT_MESSAGE_NUMBER, times.length); ++i) {
-    messages.value.unshift(JSON.parse(localStorage.getItem(times[i]) || '{}') || {})
+    messages.value.unshift(JSON.parse(localStorage.getItem(times[i].toString()) || '{}') || {})
   }
 })
 
@@ -49,32 +49,35 @@ async function handlePostMessage () {
   const input = unref(inputValue)
   const mes = new Message('user', input)
 
+  inputValue.value = ''
+
   if (input.length === 0) return
 
   messages.value.push(mes)
 
   try {
-    const res = await axios.post('http://114.132.221.148/processText', input, {
+    const res = await axios.post('http://114.132.221.148/processText', {
+      text: input
+    }, {
       headers: {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'multipart/form-data'
       }
     })
     console.log(res)
 
-    // todo    save message
+    mes.response = res.data
+    messages.value.push(new Message('robot', res.data))
+
     localStorage.setItem(mes.timestamp.toString(), JSON.stringify(mes))
     localStorage.setItem('timestamp', JSON.stringify((JSON.parse(localStorage.getItem('timestamp') || '[]') || []).unshift(mes.timestamp)))
 
     inputValue.value = ''
-    ElMessage({
-      type: 'success',
-      message: '成功',
-      showClose: true
-    })
   } catch (err) {
     console.error(err)
 
     messages.value.pop()
+
+    inputValue.value = input
 
     ElMessage({
       type: 'error',
